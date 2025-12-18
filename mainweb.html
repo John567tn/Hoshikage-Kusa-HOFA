@@ -1,0 +1,280 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Hoshikage Kusa | 星影茸社区门户</title>
+    <!-- 基础运行环境 -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script src="https://unpkg.com/lucide@latest"></script>
+    <script src="https://unpkg.com/react@18/umd/react.production.min.js"></script>
+    <script src="https://unpkg.com/react-dom@18/umd/react-dom.production.min.js"></script>
+    <script src="https://unpkg.com/@babel/standalone/babel.min.js"></script>
+    <style>
+        @import url('https://fonts.googleapis.com/css2?family=Noto+Sans+SC:wght@400;500;700;900&display=swap');
+        body { font-family: 'Noto Sans SC', sans-serif; }
+        .animate-in { animation: fadeIn 0.4s ease-out forwards; }
+        @keyframes fadeIn { from { opacity: 0; transform: translateY(10px); } to { opacity: 1; transform: translateY(0); } }
+    </style>
+</head>
+<body class="bg-[#f8f9fa]">
+    <div id="root"></div>
+
+    <script type="text/babel">
+        const { useState, useEffect } = React;
+
+        // 图标组件转换逻辑：映射 Lucide 图标名称
+        const Icon = ({ name, size = 20, className = "" }) => {
+            useEffect(() => {
+                if (window.lucide) {
+                    window.lucide.createIcons();
+                }
+            }, [name]);
+            return <i data-lucide={name} style={{ width: size, height: size }} className={`inline-block ${className}`}></i>;
+        };
+
+        const App = () => {
+            const [activeTab, setActiveTab] = useState('home');
+            const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
+
+            // 保持你代码中的配置
+            const communityLogo = "12283.png"; 
+
+            const communityInfo = {
+                name: "Hoshikage Kusa • HOFA",
+                cnName: "Hoshikage Kusa 星影茸 • HOFA",
+                description: "各位兽兽、飞友的小社区",
+                tagline: "在这里，每一片星影都值得被温柔对待。"
+            };
+
+            const menuItems = [
+                { id: 'home', label: '社区首页', icon: 'home' },
+                { id: 'events', label: '兽聚资讯', icon: 'ticket' },
+                { id: 'rules', label: '社区公约', icon: 'gavel' },
+                { id: 'join', label: '加入社区', icon: 'user-plus' },
+                { id: 'notices', label: '公告通知', icon: 'megaphone' },
+                { id: 'gallery', label: '精彩相册', icon: 'image' },
+            ];
+
+            const events = [
+                { id: 1, title: "Test01", date: "Test01", location: "Test01", tag: "Test01", image: "https://images.unsplash.com/photo-1540575467063-178a50c2df87?auto=format&fit=crop&w=800&q=80" },
+                { id: 2, title: "Test02", date: "Test02", location: "Test02", tag: "Test02", image: "https://images.unsplash.com/photo-1492684223066-81342ee5ff30?auto=format&fit=crop&w=800&q=80" }
+            ];
+
+            const groupBranches = [
+                { id: 1, name: "Hoshikage Kusa 星影茸 • HOFA ", type: "社区主群", description: "社区的主群，欢迎所有兽兽&飞友加入。", count: "10+ 成员", color: "from-emerald-500 to-teal-600" },
+                { id: 2, name: "分支-福瑞(待创建)", type: "福瑞", description: "兽兽、Fursuiter 专属频道。", count: "0 成员", color: "from-blue-500 to-indigo-600" },
+                { id: 3, name: "分支-飞友(待创建)", type: "飞友", description: "航空爱好者、模拟飞行玩家的集合点。", count: "0 成员", color: "from-sky-400 to-blue-500" }
+            ];
+
+            const notices = [
+                { id: 1, type: "必读", title: "【重要】群内昵称格式修改通知", date: "2025-12-16", content: "请务必按照格式修改：【福瑞/飞友】+ QQ名称。未修改者将无法获得分支群分配。" },
+                { id: 2, type: "管理员招募", title: "社区主群常驻管理员与非常驻管理员目前正接受申请", date: "2023", content: "福瑞＆飞友社区-[Hoshikage Kusa 星影茸• HOFA] 正在紧锣密鼓的筹划中，现需要招募两名常驻furry管理员以及三名非常驻管理员，详情请联系Ryuuge Kisaki(3780090971)/Gokugo極伍(2179287841)" }
+            ];
+
+            return (
+                <div className="flex min-h-screen bg-[#f8f9fa] text-slate-800">
+                    {/* 侧边栏 */}
+                    <aside className={`fixed inset-y-0 left-0 z-50 w-64 bg-slate-900 text-white transform transition-transform duration-300 ${isMobileMenuOpen ? 'translate-x-0' : '-translate-x-full'} md:translate-x-0`}>
+                        <div className="flex flex-col h-full">
+                            <div className="p-6 border-b border-slate-800 flex items-center gap-3">
+                                <div className="w-10 h-10 bg-white rounded-lg overflow-hidden shadow-lg shrink-0">
+                                    <img src={communityLogo} className="w-full h-full object-cover" onError={(e) => { e.target.src = "https://via.placeholder.com/40?text=H" }} />
+                                </div>
+                                <div>
+                                    <h1 className="font-black text-lg">星影茸</h1>
+                                    <p className="text-[10px] text-slate-400 uppercase tracking-widest">HOFA Community</p>
+                                </div>
+                            </div>
+                            <nav className="flex-1 px-4 py-6 space-y-2">
+                                {menuItems.map(item => (
+                                    <button key={item.id} onClick={() => { setActiveTab(item.id); setIsMobileMenuOpen(false); }} className={`w-full flex items-center gap-3 px-4 py-3 rounded-xl transition-all ${activeTab === item.id ? 'bg-emerald-600 text-white shadow-lg' : 'text-slate-400 hover:bg-slate-800 hover:text-white'}`}>
+                                        <Icon name={item.icon} />
+                                        <span className="font-medium">{item.label}</span>
+                                    </button>
+                                ))}
+                            </nav>
+                            <div className="p-6 border-t border-slate-800">
+                                <div className="flex items-center gap-2 text-xs text-slate-500">
+                                    <Icon name="heart" size={12} className="text-red-500" />
+                                    <span>Hoshikage Kusa 星影茸 • HOFA</span>
+                                </div>
+                            </div>
+                        </div>
+                    </aside>
+
+                    {/* 主内容 */}
+                    <main className="flex-1 md:ml-64 min-h-screen flex flex-col">
+                        <header className="md:hidden flex items-center justify-between p-4 bg-white border-b sticky top-0 z-40">
+                            <div className="flex items-center gap-2">
+                                <img src={communityLogo} className="w-8 h-8 rounded-md object-cover" />
+                                <span className="font-bold">星影茸 • HOFA</span>
+                            </div>
+                            <button onClick={() => setIsMobileMenuOpen(true)} className="p-2"><Icon name="menu" /></button>
+                        </header>
+
+                        <div className="p-6 md:p-10 flex-grow max-w-6xl w-full mx-auto">
+                            {/* 首页 */}
+                            {activeTab === 'home' && (
+                                <div className="space-y-10 animate-in">
+                                    <div className="bg-white rounded-[2rem] p-8 md:p-16 relative overflow-hidden shadow-sm border border-slate-100">
+                                        <div className="relative z-10">
+                                            <span className="inline-block px-4 py-1 bg-emerald-100 text-emerald-700 rounded-full text-xs font-bold mb-4">Official Website</span>
+                                            <h2 className="text-4xl md:text-6xl font-black text-slate-900 mb-6 leading-tight">
+                                                欢迎来到 <span className="text-emerald-600">Hoshikage Kusa</span> <br /> 星影茸 • HOFA 社区。
+                                            </h2>
+                                            <p className="text-lg text-slate-500 max-w-xl leading-relaxed">{communityInfo.tagline}</p>
+                                        </div>
+                                    </div>
+                                    <div className="grid md:grid-cols-3 gap-6">
+                                        <div className="bg-emerald-600 text-white p-8 rounded-[2rem] shadow-xl cursor-pointer group" onClick={() => setActiveTab('events')}>
+                                            <h3 className="text-xl font-bold mb-1">兽聚情报</h3>
+                                            <p className="opacity-80 text-sm mb-6">规划你的面基之旅</p>
+                                            <Icon name="arrow-right" />
+                                        </div>
+                                        <div className="bg-slate-900 text-white p-8 rounded-[2rem] shadow-xl cursor-pointer group" onClick={() => setActiveTab('rules')}>
+                                            <h3 className="text-xl font-bold mb-1">社区公约</h3>
+                                            <p className="opacity-80 text-sm mb-6">共同维护社区环境</p>
+                                            <Icon name="arrow-right" />
+                                        </div>
+                                        <div className="bg-white border p-8 rounded-[2rem] shadow-sm hover:border-emerald-500 transition-colors cursor-pointer group" onClick={() => setActiveTab('join')}>
+                                            <h3 className="text-xl font-bold mb-1 text-slate-900">加入我们</h3>
+                                            <p className="text-slate-500 text-sm mb-6">发现同好分支群</p>
+                                            <Icon name="arrow-right" className="text-emerald-600" />
+                                        </div>
+                                    </div>
+                                </div>
+                            )}
+
+                            {/* 加入社区 */}
+                            {activeTab === 'join' && (
+                                <div className="animate-in">
+                                    <div className="mb-10">
+                                        <h2 className="text-3xl font-black mb-2">加入社区</h2>
+                                        <p className="text-slate-500 text-lg">寻找你的归属分支，开启交流之旅。</p>
+                                    </div>
+                                    <div className="grid md:grid-cols-3 gap-6">
+                                        {groupBranches.map(group => (
+                                            <div key={group.id} className="bg-white rounded-[2rem] border border-slate-100 p-8 hover:shadow-xl transition-all">
+                                                <div className={`w-12 h-12 rounded-xl bg-gradient-to-br ${group.color} text-white flex items-center justify-center mb-6`}>
+                                                    <Icon name="users" />
+                                                </div>
+                                                <h3 className="text-xl font-bold text-slate-900 mb-2">{group.name}</h3>
+                                                <p className="text-slate-500 text-sm leading-relaxed mb-6 h-10 line-clamp-2">{group.description}</p>
+                                                <div className="flex items-center justify-between mt-auto pt-6 border-t">
+                                                    <span className="text-xs text-slate-400">{group.count}</span>
+                                                    <Icon name="arrow-right" className="text-emerald-600" />
+                                                </div>
+                                            </div>
+                                        ))}
+                                    </div>
+                                </div>
+                            )}
+
+                            {/* 兽聚资讯 */}
+                            {activeTab === 'events' && (
+                                <div className="animate-in">
+                                    <h2 className="text-3xl font-black mb-8">兽聚资讯</h2>
+                                    <div className="grid md:grid-cols-2 gap-8">
+                                        {events.map(event => (
+                                            <div key={event.id} className="bg-white rounded-3xl overflow-hidden shadow-sm border border-slate-100 group">
+                                                <div className="h-56 relative overflow-hidden">
+                                                    <img src={event.image} className="w-full h-full object-cover group-hover:scale-105 transition duration-500" />
+                                                    <div className="absolute top-4 left-4"><span className="px-3 py-1 bg-white/90 rounded-full text-xs font-bold text-emerald-600">{event.tag}</span></div>
+                                                </div>
+                                                <div className="p-6">
+                                                    <h3 className="text-xl font-bold mb-4">{event.title}</h3>
+                                                    <div className="space-y-2 text-sm text-slate-500 mb-6">
+                                                        <div className="flex items-center gap-2"><Icon name="calendar" size={16} /> {event.date}</div>
+                                                        <div className="flex items-center gap-2"><Icon name="map-pin" size={16} /> {event.location}</div>
+                                                    </div>
+                                                    <button className="w-full py-3 bg-slate-50 text-slate-700 font-bold rounded-xl hover:bg-emerald-600 hover:text-white transition">查看活动详情</button>
+                                                </div>
+                                            </div>
+                                        ))}
+                                    </div>
+                                </div>
+                            )}
+
+                            {/* 规则 */}
+                            {activeTab === 'rules' && (
+                                <div className="animate-in max-w-3xl">
+                                    <h2 className="text-3xl font-black mb-8">社区规则</h2>
+                                    <div className="space-y-6">
+                                        {[
+                                            { id: "2.1", title: "政治与敏感话题", content: "严禁讨论政治、敏感、国家相关问题。本社区旨在提供轻松的交流环境。", penalty: "直接踢出" },
+                                            { id: "2.2", title: "内容底线", content: "严禁发布 R18、过度擦边、易让人不适、恐、谣、暴等内容。", penalty: "1次" },
+                                            { id: "2.7", title: "文明交流", content: "严禁引战、吵架、挑衅他人或道德绑架。请保持友善。", penalty: "2次" },
+                                            { id: "2.8", title: "消息频率", content: "严禁短时间内连续刷屏超过 5 条及以上。", penalty: "3次" }
+                                        ].map(rule => (
+                                            <div key={rule.id} className="bg-white p-6 rounded-2xl border border-slate-100 flex gap-6">
+                                                <div className="w-12 h-12 bg-red-50 text-red-500 rounded-xl flex items-center justify-center font-bold shrink-0">{rule.id}</div>
+                                                <div>
+                                                    <div className="flex items-center gap-3 mb-2">
+                                                        <h4 className="font-bold text-lg">{rule.title}</h4>
+                                                        <span className="text-[10px] bg-red-100 text-red-700 px-2 py-0.5 rounded font-bold">{rule.penalty}</span>
+                                                    </div>
+                                                    <p className="text-slate-500 text-sm leading-relaxed">{rule.content}</p>
+                                                </div>
+                                            </div>
+                                        ))}
+                                    </div>
+                                </div>
+                            )}
+
+                            {/* 公告 */}
+                            {activeTab === 'notices' && (
+                                <div className="animate-in max-w-4xl">
+                                    <h2 className="text-3xl font-black mb-8">社区公告</h2>
+                                    <div className="space-y-4">
+                                        {notices.map(notice => (
+                                            <div key={notice.id} className="bg-white p-6 rounded-2xl border border-slate-100 shadow-sm hover:border-emerald-200 transition group">
+                                                <div className="flex flex-col md:flex-row md:items-center justify-between gap-4">
+                                                    <div className="flex items-start gap-4">
+                                                        <div className="p-3 bg-emerald-50 text-emerald-600 rounded-xl"><Icon name="megaphone" /></div>
+                                                        <div>
+                                                            <div className="flex items-center gap-2 mb-1">
+                                                                <span className="text-[10px] font-bold bg-emerald-600 text-white px-2 py-0.5 rounded">{notice.type}</span>
+                                                                <span className="text-xs text-slate-400">{notice.date}</span>
+                                                            </div>
+                                                            <h4 className="font-bold text-slate-800">{notice.title}</h4>
+                                                            <p className="text-sm text-slate-500 mt-2 leading-relaxed">{notice.content}</p>
+                                                        </div>
+                                                    </div>
+                                                    <Icon name="chevron-right" className="text-slate-400 group-hover:text-emerald-600 transition" />
+                                                </div>
+                                            </div>
+                                        ))}
+                                    </div>
+                                </div>
+                            )}
+
+                            {/* 相册 */}
+                            {activeTab === 'gallery' && (
+                                <div className="animate-in">
+                                    <h2 className="text-3xl font-black mb-8">社区相册</h2>
+                                    <div className="grid grid-cols-2 md:grid-cols-4 gap-4">
+                                        {[1, 2, 3, 4, 5, 6, 7, 8].map(i => (
+                                            <div key={i} className="aspect-square rounded-2xl overflow-hidden bg-slate-200 relative group cursor-pointer shadow-sm">
+                                                <img src={`https://picsum.photos/seed/${i + 50}/600`} className="w-full h-full object-cover group-hover:scale-110 transition duration-500" />
+                                                <div className="absolute inset-0 bg-black/40 opacity-0 group-hover:opacity-100 transition-opacity flex items-center justify-center">
+                                                    <Icon name="camera" className="text-white" />
+                                                </div>
+                                            </div>
+                                        ))}
+                                    </div>
+                                </div>
+                            )}
+                        </div>
+                    </main>
+
+                    {isMobileMenuOpen && <div className="fixed inset-0 bg-black/50 z-40 md:hidden" onClick={() => setIsMobileMenuOpen(false)} />}
+                </div>
+            );
+        };
+
+        const root = ReactDOM.createRoot(document.getElementById('root'));
+        root.render(<App />);
+    </script>
+</body>
+</html>
