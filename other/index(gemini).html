@@ -42,11 +42,11 @@
 
             const menuItems = [
                 { id: 'home', label: '社区首页', icon: 'home' },
-                { id: 'events', label: '兽聚资讯', icon: 'map' },
-                { id: 'rules', label: '社区规则', icon: 'book-open-text' },
+                { id: 'events', label: '兽聚资讯', icon: 'ticket' },
+                { id: 'rules', label: '社区公约', icon: 'gavel' },
                 { id: 'join', label: '加入社区', icon: 'user-plus' },
                 { id: 'notices', label: '公告通知', icon: 'megaphone' },
-                { id: 'gallery', label: '新功能持续开发中', icon: 'file-code' },
+                { id: 'gallery', label: '新功能持续开发中', icon: 'image' },
             ];
 
             // 公告通知数据 (在这里添加新公告)
@@ -175,7 +175,7 @@
                                         <div className="relative z-10">
                                             <span className="inline-block px-4 py-1 bg-emerald-100 text-emerald-700 rounded-full text-[10px] font-bold mb-4 uppercase tracking-widest">Official Portal</span>
                                             <h2 className="text-4xl md:text-6xl font-black text-slate-900 mb-6 leading-tight">
-                                                欢迎来到 <span className="text-emerald-500">Hoshikage Kusa</span> <br /> 星影茸 • HOFA 社区
+                                                欢迎来到 <span className="text-emerald-500">Hoshikage Kusa</span> <br /> 星影茸 • HOFA 社区。
                                             </h2>
                                             <p className="text-lg text-slate-500 max-w-xl leading-relaxed">在这里，每一片星影都值得被温柔对待。</p>
                                         </div>
@@ -188,8 +188,8 @@
                                             <Icon name="arrow-right" />
                                         </div>
                                         <div className="bg-slate-900 text-white p-8 rounded-[2.5rem] shadow-xl cursor-pointer hover:-translate-y-1 transition-transform" onClick={() => setActiveTab('rules')}>
-                                            <h3 className="text-xl font-bold mb-2">社区规则</h3>
-                                            <p className="opacity-80 text-sm mb-6">了解社区规则与管理守则</p>
+                                            <h3 className="text-xl font-bold mb-2">社区公约</h3>
+                                            <p className="opacity-80 text-sm mb-6">了解群规与管理守则</p>
                                             <Icon name="arrow-right" />
                                         </div>
                                         <div className="bg-white border p-8 rounded-[2.5rem] shadow-sm hover:border-emerald-500 transition-all hover:-translate-y-1 cursor-pointer" onClick={() => setActiveTab('join')}>
@@ -201,14 +201,14 @@
                                 </div>
                             )}
 
-                            {/* 社区规则版块 */}
+                            {/* 社区公约版块 */}
                             {activeTab === 'rules' && (
                                 <div className="animate-in max-w-4xl mx-auto pb-20">
                                     <div className="flex flex-col md:flex-row md:items-end justify-between mb-10 gap-6">
                                         <div>
                                             <div className="flex items-center gap-2 mb-2">
-                                                <div className={`w-2 h-8 rounded-full ${rulesPage === 1 ? 'bg-emerald-500' : rulesPage === 2 ? 'bg-red-500' : 'bg-blue-500'}`}></div>
-                                                <h2 className="text-3xl font-black text-slate-900">社区规则</h2>
+                                                <div className={`w-2 h-8 rounded-full ${rulesPage === 1 ? 'bg-emerald-500' : 'bg-red-500'}`}></div>
+                                                <h2 className="text-3xl font-black text-slate-900">社区公约</h2>
                                             </div>
                                             <p className="text-slate-500 text-sm">维护良好的社区环境是每位成员的义务</p>
                                         </div>
@@ -229,20 +229,15 @@
                                                 onClick={() => setRulesPage(3)}
                                                 className={`px-5 py-2.5 rounded-xl text-xs font-bold transition-all flex items-center gap-2 ${rulesPage === 3 ? 'bg-white text-blue-600 shadow-md scale-[1.02]' : 'text-slate-500 hover:text-slate-700'}`}
                                             >
-                                                <Icon name="gavel" size={14} /> 处罚管理
+                                                <Icon name="shield-off" size={14} /> 处罚管理
                                             </button>
+                                            
+                                            
                                             </div>
                                     </div>
 
                                     <div className="space-y-3 animate-in">
-                                        {(rulesPage === 1
-                                        ? welcomeRules
-                                        : rulesPage === 2
-                                        ? banRules
-                                        : rulesPage === 3
-                                        ? PenaltyManagement
-                                        : []
-                                        ).map((rule) => (
+                                        {(rulesPage === 1 ? welcomeRules : banRules).map((rule) => (
                                             <div key={rule.id} className={`bg-white p-5 rounded-3xl border border-slate-100 flex flex-col md:flex-row md:items-center gap-5 shadow-sm transition-all hover:shadow-md ${rulesPage === 1 ? 'hover:border-emerald-100' : 'hover:border-red-100'}`}>
                                                 <div className="flex items-center gap-5 flex-1">
                                                     <div className={`w-12 h-12 rounded-2xl flex items-center justify-center shrink-0 shadow-sm ${rulesPage === 1 ? 'bg-emerald-50 text-emerald-500' : 'bg-red-50 text-red-500'}`}>
@@ -257,19 +252,24 @@
                                                     </div>
                                                 </div>
                                                 <div className="flex md:w-32 justify-end">
-                                                 {rulesPage === 2 && (
-                                                 <span className="text-[10px] bg-red-100 text-red-700 px-3 py-1.5 rounded-full font-black uppercase whitespace-nowrap">
-                                                 处罚：{rule.penalty}
-                                                 </span>
-                                                 )}
-                                                 {/* 1 和 3 直接不渲染任何内容 → 右侧空白 */}
+                                                    {rulesPage === 2 ? (
+                                                        <span className="text-[10px] bg-red-100 text-red-700 px-3 py-1.5 rounded-full font-black uppercase whitespace-nowrap">
+                                                            处罚：{rule.penalty}
+                                                        </span>
+                                                    ) : (
+                                                        <div className="w-8 h-8 rounded-full bg-emerald-50 text-emerald-300 flex items-center justify-center">
+                                                            <Icon name="check" size={16} />
+                                                        </div>
+                                                       
+                                                    )}
                                                 </div>
                                             </div>
                                         ))}
                                     </div>
                                     <div className="mt-12 flex justify-center items-center gap-8">
-                                        <button disabled={rulesPage === 1} onClick={() => setRulesPage(prev => Math.max(1, prev - 1))} className={`flex items-center gap-2 text-xs font-bold ${rulesPage === 1 ? 'opacity-20' : 'text-slate-400 hover:text-slate-800'}`}><Icon name="arrow-left" size={16} /> 上一页</button>
+                                        <button disabled={rulesPage === 1} onClick={() => setRulesPage(1)} className={`flex items-center gap-2 text-xs font-bold ${rulesPage === 1 ? 'opacity-20' : 'text-slate-400 hover:text-slate-800'}`}><Icon name="arrow-left" size={16} /> 上一页</button>
                                         <div className="flex gap-2">{[1, 2, 3].map(p => (<div key={p} className={`w-2 h-2 rounded-full transition-all duration-300 ${rulesPage === p ? 'w-10 bg-slate-800' : 'bg-slate-300'}`} />))}</div>
+                                        <button disabled={rulesPage === 2} onClick={() => setRulesPage(prev => prev + 1)} className={`flex items-center gap-2 text-xs font-bold ${rulesPage === 2 ? 'opacity-20' : 'text-slate-400 hover:text-slate-800'}`}>下一页 <Icon name="arrow-right" size={16} /></button>
                                         <button disabled={rulesPage === 3} onClick={() => setRulesPage(prev => prev + 1)} className={`flex items-center gap-2 text-xs font-bold ${rulesPage === 3 ? 'opacity-20' : 'text-slate-400 hover:text-slate-800'}`}>下一页 <Icon name="arrow-right" size={16} /></button>                                   
                                     </div>
                                 </div>
@@ -381,5 +381,3 @@
     </script>
 </body>
 </html>
-
-//SB VSCode,SB Github,SB Cloudflare,All is SB
