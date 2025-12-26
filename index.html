@@ -20,6 +20,11 @@
 <body class="bg-[#f8f9fa]">
     <div id="root"></div>
 
+    <!-- 在原有 script 标签后添加 -->
+    <script src="events-data.js"></script>
+
+    <script src="notices-data.js"></script>
+
     <script type="text/babel">
         const { useState, useEffect } = React;
 
@@ -37,9 +42,44 @@
             const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
             const [selectedGroup, setSelectedGroup] = useState(null); 
             const [rulesPage, setRulesPage] = useState(1);
-
+            const [eventsData, setEventsData] = useState([]);
+            const [eventsLoading, setEventsLoading] = useState(true);
+            const [showQQModal, setShowQQModal] = useState(false);  
+            const [noticesData, setNoticesData] = useState([]);
             const communityLogo = "IMG_2068.JPG"; 
 
+         useEffect(() => {
+        // 加载兽聚数据
+              if (window.eventsData) {
+              setEventsData(window.eventsData);
+              setEventsLoading(false);
+             } else {
+              console.warn('无法加载兽聚资讯数据');
+             setEventsData([]);
+             setEventsLoading(false);
+            }
+            }, []);           
+
+         useEffect(() => {
+         // 加载兽聚数据
+                if (window.eventsData) {
+             setEventsData(window.eventsData);
+               setEventsLoading(false);
+               } else {
+                console.warn('无法加载兽聚资讯数据');
+             setEventsData([]);
+             setEventsLoading(false);
+              }
+              // 加载公告数据（新增）
+             if (window.noticesData) {
+             setNoticesData(window.noticesData);
+              } else {
+              console.warn('无法加载公告数据');
+             setNoticesData([]);
+              }
+             }, []);
+
+            
             const menuItems = [
                 { id: 'home', label: '社区首页', icon: 'home' },
                 { id: 'events', label: '兽聚资讯', icon: 'map' },
@@ -47,39 +87,8 @@
                 { id: 'join', label: '加入社区', icon: 'user-plus' },
                 { id: 'notices', label: '公告通知', icon: 'megaphone' },
                 { id: 'gallery', label: '新功能持续开发中', icon: 'file-code' },
-            ];
-
-            // 公告通知数据 (在这里添加新公告)
-            const noticesData = [
-                { 
-                    id: 1, 
-                    title: "星影茸社区正式上线！", 
-                    date: "2025-12-19", 
-                    tag: "系统", 
-                    isPinned: true,
-                    content: "经过一段时间的筹备，我们的社区导航页面正式发布啦。在这里你可以快速找到各个分支群入口，查看最新的社区公约。欢迎大家收藏访问！",
-                    color: "bg-emerald-500"
-                },
-                { 
-                    id: 3, 
-                    title: "关于群昵称规范化的通知", 
-                    date: "2025-12-15", 
-                    tag: "规范", 
-                    isPinned: false,
-                    content: "请各位按照昵称格式去修改，格式为:【福瑞/飞友】+ QQ名称，因为会将大家分配到所属的分支群里面，乱改/不改的话，我们会无法分配您到所属的分支群里",
-                    color: "bg-blue-500"
-                },
-                { 
-                    id: 2, 
-                    title: "Hoshikage星影茸 • HOFA 社区欢迎你！", 
-                    date: "2025-12-15", 
-                    tag: "欢迎", 
-                    isPinned: false,
-                    content: "Hoshikage Kusa 星影茸 • HOFA 社区在今天正式创建了,欢迎加入! 无论你是热爱福瑞文化的兽兽，还是痴迷航空的飞友，这里都是大家的家园。请务必阅读社区公约，了解我们的行为准则，共同营造一个友善、包容的交流环境。",
-                    color: "bg-sky-500"
-                }
-            ];
-
+            ];       
+            
             const groupBranches = [
                 { id: 1, name: "星影茸 • HOFA 社区总群", type: "社区主群", description: "社区的主群，欢迎兽兽&飞友加入。", count: "10+ 成员", color: "from-emerald-500 to-teal-600", groupNum: "1073288849", qrCode: "IMG_2047.JPG" },
                 { id: 2, name: "星影茸 • 福瑞分支(待创建)", type: "福瑞", description: "兽兽、Furry 分支社区", count: "0 成员", color: "from-blue-500 to-indigo-600", groupNum: "N/A", qrCode: "N/A" },
@@ -108,8 +117,8 @@
 
             const PenaltyManagement = [
                 { id: "4.1", title: "规则4.1", content:"所有处罚过程透明公开，不会针对任何人"},
-                { id: "4.2", title: "规则4.2", content:"犯规就是犯规，不要狡辩"},
-                { id: "4.3", title: "规则4.3", content:"触犯规则的处罚方法"},
+                { id: "4.2", title: "规则4.2", content:"犯规会被立即处罚，如对处罚有疑问，可以来上诉"},
+                { id: "4.3", title: "规则4.3", content:"触犯规则的处罚方法如下"},
                 { id: "4.3.1", title: "规则4.3.1", content:" (对于普通群友/社区人员) 规则2.1 第1次：踢出群聊/社区、规则2.2~2.5 第1次：警告+禁言1小时，第2次：踢出群聊/社区、规则2.6~2.9 第1次：警告+禁言一小时，第2次：警告+禁言24小时，第2/3次：踢出群聊/社区"},
                 { id: "4.3.2", title: "规则4.3.2", content:"(针对群主/管理员) 规则2.1 第1次：踢出群聊/社区+永久撤销群主/管理员权限、规则2.2~2.5 第1次：警告+禁言48小时+暂时撤销群主/管理员权限168小时，第2次：踢出群聊/社区+永久撤销群主/管理员权限、规则2.6~2.9 第1次：警告+禁言48小时+暂时撤销群主/管理员权限168小时，第2次：警告+禁言72小时+撤销群主/管理员权限 ，第2/3次：踢出群聊/社区+永久撤销群主/管理员权限"},
 
@@ -155,6 +164,36 @@
                             </div>
                         </div>
                     </aside>
+
+                    {/* QQ提示弹窗 */}
+                       {showQQModal && (
+                     <div 
+                     className="fixed inset-0 z-50 flex items-center justify-center bg-black/30 backdrop-blur-sm transition-opacity animate-in"
+                     onClick={() => setShowQQModal(false)}
+                     >
+                     <div 
+                     className="bg-white rounded-[2rem] p-8 md:p-12 shadow-2xl border border-slate-100 transform transition-all duration-300 ease-out animate-in"
+                     onClick={(e) => e.stopPropagation()}
+                     >
+                     <div className="text-center">
+                     <div className="w-20 h-20 bg-emerald-100 rounded-full flex items-center justify-center mx-auto mb-6">
+                     <Icon name="message-circle" size={40} className="text-emerald-600" />
+                     </div>
+                     <h3 className="text-2xl font-black text-slate-900 mb-4">请前往QQ查看</h3>
+                     <p className="text-slate-500 text-sm mb-8 max-w-xs leading-relaxed">
+                     公告详情已在QQ群内发布，请移步QQ群聊查看完整内容
+                     </p>
+                     <button 
+                     onClick={() => setShowQQModal(false)}
+                     className="bg-emerald-600 text-white px-8 py-3 rounded-2xl font-bold hover:bg-emerald-700 transition-colors"
+                      >
+                     知道了
+                      </button>
+                     </div>
+                     </div>
+                     </div>
+                     )}
+
 
                     <main className="flex-1 md:ml-64 min-h-screen flex flex-col">
                         <header className="md:hidden flex items-center justify-between p-4 bg-white border-b sticky top-0 z-40 shadow-sm">
@@ -275,52 +314,58 @@
                                 </div>
                             )}
 
-                            {/* 公告通知版块 (NEW) */}
-                            {activeTab === 'notices' && (
-                                <div className="animate-in max-w-4xl mx-auto pb-20">
-                                    <div className="mb-10">
-                                        <h2 className="text-3xl font-black text-slate-900 mb-2">公告通知</h2>
-                                        <p className="text-slate-500 text-sm">社区重要动态与官方发布</p>
-                                    </div>
-                                    <div className="space-y-6">
-                                        {noticesData.map((notice) => (
-                                            <div key={notice.id} className="relative group">
-                                                {/* 置顶标识 */}
-                                                {notice.isPinned && (
-                                                    <div className="absolute -top-3 left-6 z-10 bg-amber-400 text-amber-900 px-3 py-1 rounded-full text-[10px] font-black flex items-center gap-1 shadow-sm">
-                                                        <Icon name="pin" size={10} /> 置顶公告
-                                                    </div>
-                                                )}
-                                                <div className="bg-white rounded-[2rem] border border-slate-100 p-8 shadow-sm group-hover:shadow-md transition-all">
-                                                    <div className="flex flex-col md:flex-row md:items-start gap-6">
-                                                        <div className={`w-14 h-14 rounded-2xl ${notice.color} text-white flex items-center justify-center shrink-0 shadow-lg`}>
-                                                            <Icon name="megaphone" size={24} />
-                                                        </div>
-                                                        <div className="flex-1">
-                                                            <div className="flex flex-wrap items-center gap-3 mb-3">
-                                                                <span className="text-[10px] font-black text-emerald-600 bg-emerald-50 px-2 py-0.5 rounded tracking-widest uppercase">{notice.tag}</span>
-                                                                <span className="text-[10px] font-medium text-slate-400 flex items-center gap-1"><Icon name="calendar" size={12} /> {notice.date}</span>
-                                                            </div>
-                                                            <h3 className="text-xl font-bold text-slate-900 mb-3 group-hover:text-emerald-600 transition-colors">{notice.title}</h3>
-                                                            <p className="text-slate-500 text-sm leading-relaxed mb-6">{notice.content}</p>
-                                                            <button className="text-xs font-bold text-slate-400 group-hover:text-emerald-600 flex items-center gap-2 transition-all">
-                                                                查看详情内容 <Icon name="chevron-right" size={14} className="group-hover:translate-x-1 transition-transform" />
-                                                            </button>
-                                                        </div>
-                                                    </div>
-                                                </div>
-                                            </div>
-                                        ))}
-                                    </div>
-                                    {/* 空状态占位 */}
-                                    {noticesData.length === 0 && (
-                                        <div className="py-20 text-center text-slate-400">
-                                            <Icon name="inbox" size={48} className="mx-auto mb-4 opacity-20" />
-                                            <p>暂无新公告</p>
-                                        </div>
-                                    )}
+                            {/* 公告通知版块 */}
+                             {activeTab === 'notices' && (
+                             <div className="animate-in max-w-4xl mx-auto pb-20">
+                              <div className="mb-10">
+                             <h2 className="text-3xl font-black text-slate-900 mb-2">公告通知</h2>
+                             <p className="text-slate-500 text-sm">社区重要动态与官方发布</p>
+                             </div>
+                             <div className="space-y-6">
+                             {noticesData.map((notice) => (
+                             <div key={notice.id} className="relative group">
+                             {notice.isPinned && (
+                             <div className="absolute -top-3 left-6 z-10 bg-amber-400 text-amber-900 px-3 py-1 rounded-full text-[10px] font-black flex items-center gap-1 shadow-sm">
+                             <Icon name="pin" size={10} /> 置顶公告
+                             </div>
+                             )}
+                              <div className="bg-white rounded-[2rem] border border-slate-100 p-8 shadow-sm group-hover:shadow-md transition-all">
+                             <div className="flex flex-col md:flex-row md:items-start gap-6">
+                              <div className={`w-14 h-14 rounded-2xl ${notice.color} text-white flex items-center justify-center shrink-0 shadow-lg`}>
+                                <Icon name="megaphone" size={24} />
+                              </div>
+                              <div className="flex-1">
+                                <div className="flex flex-wrap items-center gap-3 mb-3">
+                                    <span className="text-[10px] font-black text-emerald-600 bg-emerald-50 px-2 py-0.5 rounded tracking-widest uppercase">{notice.tag}</span>
+                                    <span className="text-[10px] font-medium text-slate-400 flex items-center gap-1"><Icon name="calendar" size={12} /> {notice.date}</span>
                                 </div>
-                            )}
+                                <h3 className="text-xl font-bold text-slate-900 mb-3 group-hover:text-emerald-600 transition-colors">{notice.title}</h3>
+                                <p className="text-slate-500 text-sm leading-relaxed mb-6">{notice.content}</p>
+                                {/* 按钮 */}
+                                <button 
+                                    onClick={() => notice.qqGroup && setShowQQModal(true)}
+                                    className={`text-xs font-bold flex items-center gap-2 transition-all ${
+                                        notice.qqGroup ? 'text-emerald-600 hover:text-emerald-700 cursor-pointer' : 'text-slate-400 cursor-default'
+                                    }`}
+                                >
+                                    {notice.qqGroup ? '查看详情内容' : '暂无详情'}
+                                    <Icon name="chevron-right" size={14} className="transition-transform group-hover:translate-x-1" />
+                                </button>
+                              </div>
+                                   </div>
+                                       </div>
+                                          </div>
+                                                ))}
+                                                  </div>
+                                  {/* 空状态占位 */}
+                                    {noticesData.length === 0 && (
+                                       <div className="py-20 text-center text-slate-400">
+                                        <Icon name="inbox" size={48} className="mx-auto mb-4 opacity-20" />
+                                          <p>暂无新公告</p>
+                                            </div>
+                                                 )}
+                                                 </div>
+                                                    )}
 
                             {/* 加入社区版块 */}
                             {activeTab === 'join' && (
@@ -360,21 +405,77 @@
                                 </div>
                             )}
 
-                            {/* 建设中占位符 */}
-                            {(activeTab === 'events' || activeTab === 'gallery') && (
-                                <div className="animate-in flex flex-col items-center justify-center py-20 text-center">
-                                    <div className="w-20 h-20 bg-slate-100 rounded-full flex items-center justify-center text-slate-400 mb-6"><Icon name="clock" size={40} /></div>
-                                    <h2 className="text-2xl font-bold text-slate-800 mb-2">正在筹备中</h2>
-                                    <p className="text-slate-500 text-sm">该版块内容正在筹备中，敬请期待！</p>
-                                </div>
-                            )}
-                        </div>
-                    </main>
-
-                    {isMobileMenuOpen && <div className="fixed inset-0 bg-black/50 z-40 md:hidden" onClick={() => setIsMobileMenuOpen(false)} />}
-                </div>
-            );
-        };
+                        {/* 兽聚资讯版块 */}
+                            {activeTab === 'events' && (
+                         <div className="animate-in max-w-4xl mx-auto pb-20">
+                             <div className="mb-10">
+                                  <h2 className="text-3xl font-black text-slate-900 mb-2">兽聚资讯</h2>
+                              <p className="text-slate-500 text-sm">最新活动信息与线下聚会动态</p>
+                          </div>
+        
+                          {/* 加载状态 */}
+                               {eventsLoading ? (
+                                   <div className="py-20 text-center text-slate-400">
+                                   <Icon name="loader" size={48} className="mx-auto mb-4 animate-spin" />
+                                       <p>正在加载活动信息...</p>
+                                    </div>
+                                ) : (
+                               <div className="space-y-6">
+                                   {eventsData.map((event) => (
+                                         <div key={event.id} className="relative group">
+                                             {event.isPinned && (
+                                                        <div className="absolute -top-3 left-6 z-10 bg-purple-400 text-purple-900 px-3 py-1 rounded-full text-[10px] font-black flex items-center gap-1 shadow-sm">
+                                                     <Icon name="pin" size={10} /> 热门活动
+                                                 </div>
+                                               )}
+                                               <div className="bg-white rounded-[2rem] border border-slate-100 p-8 shadow-sm group-hover:shadow-md transition-all">
+                                                    <div className="flex flex-col md:flex-row md:items-start gap-6">
+                                                       <div className={`w-14 h-14 rounded-2xl ${event.color} text-white flex items-center justify-center shrink-0 shadow-lg`}>
+                                                            <Icon name="map-pin" size={24} />
+                                                        </div>
+                                                        <div className="flex-1">
+                                                      <div className="flex flex-wrap items-center gap-3 mb-3">
+                                                         <span className="text-[10px] font-black text-purple-600 bg-purple-50 px-2 py-0.5 rounded tracking-widest uppercase">{event.tag}</span>
+                                                               <span className="text-[10px] font-medium text-slate-400 flex items-center gap-1"><Icon name="calendar" size={12} /> {event.date}</span>
+                                                              <span className="text-[10px] font-medium text-slate-400 flex items-center gap-1"><Icon name="map-pin" size={12} /> {event.location}</span>
+                                                               {event.status && (
+                                                                 <span className="text-[10px] font-medium text-emerald-600 bg-emerald-50 px-2 py-0.5 rounded">
+                                                                        {event.status}
+                                                                    </span>
+                                                                )}
+                                                             </div>
+                                                             <h3 className="text-xl font-bold text-slate-900 mb-3 group-hover:text-purple-600 transition-colors">{event.title}</h3>
+                                                             <p className="text-slate-500 text-sm leading-relaxed mb-6">{event.content}</p>
+                                                             <button 
+                                                             onClick={() => event.url && window.open(event.url, '_blank')}
+                                                             className={`text-xs font-bold flex items-center gap-2 transition-all ${
+                                                             event.url ? 'text-purple-600 hover:text-purple-700 cursor-pointer' : 'text-slate-400 cursor-default'
+                                                             }`}
+                                                             >
+                                                             {event.url ? '了解活动详情' : '暂无详情链接'}
+                                                             <Icon name="chevron-right" size={14} className="transition-transform group-hover:translate-x-1" />
+                                                        </button>
+                                                        </div>
+                                                   </div>
+                                                 </div>
+                                            </div>
+                                         ))}
+                                     </div>
+                                  )}       
+                               {/* 空状态 */}
+                              {!eventsLoading && eventsData.length === 0 && (
+                            <div className="py-20 text-center text-slate-400">
+                              <Icon name="calendar" size={48} className="mx-auto mb-4 opacity-20" />
+                              <p>暂无活动信息</p>
+                                 </div>
+                                 )}
+                                 </div>
+                                  )}
+                               </div>
+                             </main>
+                             </div>
+                             );
+                             };
 
         const root = ReactDOM.createRoot(document.getElementById('root'));
         root.render(<App />);
